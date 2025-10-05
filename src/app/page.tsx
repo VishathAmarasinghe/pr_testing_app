@@ -1,104 +1,91 @@
-import Image from "next/image";
+'use client';
+
+import { useState } from 'react';
+import { Todo } from '@/types/todo';
+import TodoForm from '@/components/TodoForm';
+import TodoList from '@/components/TodoList';
 
 export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-            this is the initial function that we can create for the project
-          </li>
-        </ol>
+  const [todos, setTodos] = useState<Todo[]>([]);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now here
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
+  const addTodo = (text: string) => {
+    const newTodo: Todo = {
+      id: Date.now().toString(),
+      text,
+      completed: false,
+      createdAt: new Date(),
+      subtasks: [],
+      checklists: [],
+      hasSubtasks: false,
+      hasChecklists: false,
+      subtaskProgress: 0,
+      checklistProgress: 0,
+      totalSubtasks: 0,
+      completedSubtasks: 0,
+      totalChecklistItems: 0,
+      completedChecklistItems: 0,
+      priority: 3,
+      category: 'general',
+      tags: [],
+      estimatedTime: 30,
+      actualTime: 0,
+      difficulty: 1,
+      status: 'pending',
+      assignee: '',
+      deadline: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+      description: '',
+      attachments: [],
+      comments: [],
+      lastModified: new Date(),
+      isImportant: false,
+      isUrgent: false,
+      reminderDate: new Date(),
+      location: '',
+      color: '#3b82f6',
+      icon: '📝',
+      parentTaskId: '',
+      dependencies: [],
+      subtaskCount: 0,
+      checklistCount: 0
+    };
+    setTodos([newTodo, ...todos]);
+  };
+
+  const toggleTodo = (id: string) => {
+    setTodos(todos.map(todo => 
+      todo.id === id ? { ...todo, completed: !todo.completed } : todo
+    ));
+  };
+
+  const deleteTodo = (id: string) => {
+    setTodos(todos.filter(todo => todo.id !== id));
+  };
+
+  const completedCount = todos.filter(todo => todo.completed).length;
+  const totalCount = todos.length;
+
+  return (
+    <div className="min-h-screen bg-gray-50 py-8 px-4">
+      <div className="max-w-2xl mx-auto">
+        <header className="text-center mb-8">
+          <h1 className="text-4xl font-bold text-gray-800 mb-2">Todo App</h1>
+          <p className="text-gray-600">Stay organized and get things done</p>
+          {totalCount > 0 && (
+            <div className="mt-4 text-sm text-gray-500">
+              {completedCount} of {totalCount} tasks completed
+            </div>
+          )}
+        </header>
+
+        <main className="bg-white rounded-xl shadow-lg p-6">
+          <TodoForm onAddTodo={addTodo} />
+          <TodoList 
+            todos={todos} 
+            onToggle={toggleTodo} 
+            onDelete={deleteTodo} 
           />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+        </main>
+      </div>
     </div>
   );
 }
