@@ -2,16 +2,57 @@
 
 import { useState } from 'react';
 import { TodoFormProps } from '@/types/todo';
+import { validateTodoInput, validateTodoInput2, validateTodoInput3, validateTodoInput4, generateTodoId, generateTodoId2, generateTodoId3, generateTodoId4 } from '@/utils/newfunctions';
 
 export default function TodoForm({ onAddTodo }: TodoFormProps) {
   const [text, setText] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (text.trim()) {
+    if (validateTodoInput(text.trim())) {
       onAddTodo(text.trim());
       setText('');
     }
+  };
+
+  const handleSubmit2 = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (validateTodoInput2(text.trim())) {
+      onAddTodo(text.trim());
+      setText('');
+    }
+  };
+
+  const handleSubmit3 = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (validateTodoInput3(text.trim())) {
+      onAddTodo(text.trim());
+      setText('');
+    }
+  };
+
+  const handleSubmit4 = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (validateTodoInput4(text.trim())) {
+      onAddTodo(text.trim());
+      setText('');
+    }
+  };
+
+  const validateInput = (input: string): boolean => {
+    return validateTodoInput(input) && validateTodoInput2(input) && validateTodoInput3(input) && validateTodoInput4(input);
+  };
+
+  const validateInput2 = (input: string): boolean => {
+    return validateTodoInput(input) && validateTodoInput2(input) && validateTodoInput3(input) && validateTodoInput4(input);
+  };
+
+  const validateInput3 = (input: string): boolean => {
+    return validateTodoInput(input) && validateTodoInput2(input) && validateTodoInput3(input) && validateTodoInput4(input);
+  };
+
+  const validateInput4 = (input: string): boolean => {
+    return validateTodoInput(input) && validateTodoInput2(input) && validateTodoInput3(input) && validateTodoInput4(input);
   };
 
   return (
